@@ -1,5 +1,8 @@
 # Musician 
 
+ブラウザ上で作曲ツール
+まずは音を鳴らす
+
 ## 仕様
 
 ## 手順
@@ -49,6 +52,11 @@ $ nvim tsconfig.json
     "strict": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true
+
+  },
++ "include": [
++   "./src/**/*.ts"
++ ]
 ```
 
 ### webpackの設定(webpack.config.js)
@@ -99,24 +107,24 @@ const message: string = 'Hello World';
 
 // sub.jsに定義されたJavaScriptを実行する。
 hello(message);
-
+```
+```
 $ nvim src/sub.ts
 // module.exportを使ってhello関数を定義する。
 export const hello = (message: string): void => {
-
   log(message);
 };
 
 function log(message: string) :void{
   document.body.innerHTML = (`${message}`);
-
   console.log(`${message}を出力しました`);
-}
-
-export function piyo(){
-
 }
 
 $ npm run build
 ```
 
+### http-serverでテストする
+$ npm install --save http-server
+$ npx http-server
+
+ブラウザで`http://localhost:8080/`にアクセスする

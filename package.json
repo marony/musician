@@ -16,5 +16,8 @@
     "webpack": "^4.41.5",
     "webpack-cli": "^3.3.10"
   },
-  "private": true
+  "private": true,
+  "dependencies": {
+    "http-server": "^0.12.1"
+  }
 }

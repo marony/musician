@@ -5,7 +5,9 @@ export const hello = (message: string): void => {
 };
 
 function log(message: string) :void{
-  document.body.innerHTML = (`${message}`);
+  let div = document.getElementById('output');
+  if (div)
+    div.innerHTML = (`${message}`);
 
   console.log(`${message}を出力しました`);
 }
