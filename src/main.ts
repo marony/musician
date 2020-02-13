@@ -1,3 +1,4 @@
+import { Graphics, Figure } from './graphics';
 import { Audio } from './audio';
 
 export function play() {
@@ -34,11 +35,10 @@ const main = () => {
     button?.addEventListener('click', (e: Event) => play());
 
     // canvasに何か描くよ
-    const canvas = document.getElementById('canvas') as HTMLCanvasElement;
-    const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-    
-    ctx.fillStyle = 'green';
-    ctx.fillRect(10, 10, 150, 100);
+    const canvas = document.getElementById('canvas') as HTMLCanvasElement | null;
+    const graphics = Graphics.init(canvas);
+    graphics.addFigure(new Figure(0, 0, 300, 300));
+    graphics.paint(canvas);
 };
 
 main();

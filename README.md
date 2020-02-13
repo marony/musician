@@ -5,13 +5,23 @@
 
 ## ToDo
 - [x] 音を鳴らす
-- [ ] TypeScriptなのにAudioContextやCanvasの型が付いてない
+- [x] TypeScriptなのにAudioContextやCanvasの型が付いてない
 - [ ] GUIをどうするか考える
   - [ ] 鍵盤はCanvas
   - [ ] GUIはどうしよう？
   - [ ] 音源・シンセの仕組みを考える
 
 ## 仕様
+
+### 音階の周波数
+A3 = 220
+A4 = 440
+A5 = 880
+
+d = A4を0とした数字
+
+440 * (d/12)√2 -> d/12乗oすると2になる数
+= 440 * 2 ** (d / 12)
 
 ## 手順
 
@@ -55,6 +65,7 @@ $ nvim tsconfig.json
     "target": "es5",
 -   "module": "commonjs",
 +   "module": "es2015",
++   "lib": ["ESNext", "DOM"],
 +   "sourceMap": true,
 +   "outDir": "./dist",
     "strict": true,
