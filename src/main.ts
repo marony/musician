@@ -37,7 +37,10 @@ const main = () => {
     // canvasに何か描くよ
     const canvas = document.getElementById('canvas') as HTMLCanvasElement | null;
     const graphics = Graphics.init(canvas);
-    graphics.addFigure(new Figure(0, 0, 300, 300));
+    graphics.addFigure(new Figure(0, 0, 75, 300, 'red'));
+    graphics.addFigure(new Figure(75, 0, 75, 300, 'blue'));
+    graphics.addFigure(new Figure(150, 0, 75, 300, 'yellow'));
+    graphics.addFigure(new Figure(225, 0, 75, 300, 'green'));
     graphics.paint(canvas);
 };
 

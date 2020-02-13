@@ -12,28 +12,46 @@ export class Figure {
     public y: number;
     public w: number;
     public h: number;
+    public c: string;
 
-    constructor(x: number, y: number, w: number, h: number) {
+    constructor(x: number, y: number, w: number, h: number, c: string) {
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
+        this.c = c;
     }
 
-    paint(ctx: CanvasRenderingContext2D) {
-        ctx.fillStyle = 'green';
+    paint(ctx: CanvasRenderingContext2D): void {
+        ctx.fillStyle = this.c;
         ctx.fillRect(this.x, this.y, this.w, this.h);
     }
 
     isIn(x: number, y: number): boolean {
-        return true;
+        return (this.x <= x && x < this.x + this.w) &&
+            (this.y <= y && y < this.y + this.h);
+    }
+
+    onClicked(): void {
+        const d = this.x / 8;
+        const hz = 440.0 * 2 ** (d / 12);
+
+        const audio = new Audio();
+        let gain = audio.createGain()
+        let oscillator = audio.createOscillator();
+        audio.connectDestination(gain);
+        oscillator.connect(gain);
+        oscillator.frequency.value = hz;
+    
+        oscillator.start(0);
+        window.setTimeout(() => oscillator.stop(), 1000);
     }
 }
 
 export class Graphics {
     figures: Figure[] = [];
 
-    static init(canvas: HTMLCanvasElement | null) {
+    static init(canvas: HTMLCanvasElement | null): Graphics {
         window.graphics = new Graphics(canvas);
         return window.graphics;
     }
@@ -45,11 +63,11 @@ export class Graphics {
         canvas.addEventListener('click', (e: MouseEvent) => this.onClicked(e, canvas));
     }
 
-    addFigure(fig: Figure) {
+    addFigure(fig: Figure): void {
         this.figures.push(fig);
     }
 
-    paint(canvas: HTMLCanvasElement | null) {
+    paint(canvas: HTMLCanvasElement | null): void {
         if (!canvas) {
             throw "HTMLCanvasElement is null";
         }
@@ -62,24 +80,15 @@ export class Graphics {
         }
     }
 
-    onClicked(e: MouseEvent, canvas: HTMLCanvasElement) {
+    onClicked(e: MouseEvent, canvas: HTMLCanvasElement): void {
         const x = e.clientX - canvas.offsetLeft;
         const y = e.clientY - canvas.offsetTop;
-        const d = x / 8;
-        const hz = 440.0 * 2 ** (d / 12);
 
-        console.log('canvas = ' + canvas);
-        console.log('hz = ' + hz);
-        console.log('graphics = ' + (window as any).graphics);
-
-        const audio = new Audio();
-        let gain = audio.createGain()
-        let oscillator = audio.createOscillator();
-        audio.connectDestination(gain);
-        oscillator.connect(gain);
-        oscillator.frequency.value = hz;
-    
-        oscillator.start(0);
-        window.setTimeout(() => oscillator.stop(), 1000);
+        for (const fig of this.figures) {
+            if (fig.isIn(x, y)) {
+                fig.onClicked();
+                break;
+            }
+        }
     }
 }
