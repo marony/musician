@@ -1,6 +1,8 @@
 import { Graphics, Figure } from './graphics';
 import { Audio } from './audio';
+import { AudioController } from './audio_controller';
 
+// 'Play'ボタンが押されたら音を鳴らす
 export function play() {
     // OscillatorNode (Input) -> GainNode (Volume) -> AudioDestinationNode (Output)
     const audio = new Audio();
@@ -11,24 +13,9 @@ export function play() {
 
     oscillator.start(0);
     window.setTimeout(() => oscillator.stop(), 1000);
-
-    // let AudioContext = window.AudioContext;// || window.webkitAudioContext;
-    // let ac = new AudioContext();
-    // let source = ac.createBufferSource();
-    // source.connect(ac.destination);
-    // source.start(0);
-
-    // // 音声ファイルを読み込む
-    // fetch('./sounds/2608_bd.wav')
-    //     .then(res => res.arrayBuffer())
-    //     .then(compressed => {
-    //         ac.decodeAudioData(compressed)
-    //             .then(decoded => {
-    //                 source.buffer = decoded;
-    //             });
-    //     });
 }
 
+// まいんちゃん
 const main = () => {
     // クリックされたらplay()を呼ぶ
     let button = document.getElementById('play');
@@ -37,10 +24,21 @@ const main = () => {
     // canvasに何か描くよ
     const canvas = document.getElementById('canvas') as HTMLCanvasElement | null;
     const graphics = Graphics.init(canvas);
-    graphics.addFigure(new Figure(0, 0, 75, 300, 'red'));
-    graphics.addFigure(new Figure(75, 0, 75, 300, 'blue'));
-    graphics.addFigure(new Figure(150, 0, 75, 300, 'yellow'));
-    graphics.addFigure(new Figure(225, 0, 75, 300, 'green'));
+    const controller = new AudioController();
+
+    graphics.addFigure(new Figure(0, 0, 75, 300, 'red',
+        controller.onMouseDown, controller.onMouseUp,
+        controller.onMouseOver, controller.onMouseOut));
+    graphics.addFigure(new Figure(75, 0, 75, 300, 'blue',
+        controller.onMouseDown, controller.onMouseUp,
+        controller.onMouseOver, controller.onMouseOut));
+    graphics.addFigure(new Figure(150, 0, 75, 300, 'yellow',
+        controller.onMouseDown, controller.onMouseUp,
+        controller.onMouseOver, controller.onMouseOut));
+    graphics.addFigure(new Figure(225, 0, 75, 300, 'green',
+        controller.onMouseDown, controller.onMouseUp,
+        controller.onMouseOver, controller.onMouseOut));
+
     graphics.paint(canvas);
 };
 

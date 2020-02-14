@@ -1,3 +1,4 @@
+// Web Audio APIを扱う
 export class Audio {
     context: AudioContext;
 

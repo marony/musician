@@ -7,19 +7,31 @@ declare global {
     }
 };
 
+// Canvasに描く図形
 export class Figure {
-    public x: number;
-    public y: number;
-    public w: number;
-    public h: number;
-    public c: string;
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+    c: string;
 
-    constructor(x: number, y: number, w: number, h: number, c: string) {
+    onMouseDown: (target: object) => void;
+    onMouseUp: (target: object) => void;
+    onMouseOver: (target: object) => void;
+    onMouseOut: (target: object) => void;
+
+    constructor(x: number, y: number, w: number, h: number, c: string,
+        onMouseDown: (target: object) => void, onMouseUp: (target: object) => void,
+        onMouseOver: (target: object) => void, onMouseOut: (target: object) => void) {
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
         this.c = c;
+        this.onMouseDown = onMouseDown;
+        this.onMouseUp = onMouseUp;
+        this.onMouseOver = onMouseOver;
+        this.onMouseOut = onMouseOut;
     }
 
     paint(ctx: CanvasRenderingContext2D): void {
@@ -48,6 +60,7 @@ export class Figure {
     }
 }
 
+// Canvasへのo描画を担う
 export class Graphics {
     figures: Figure[] = [];
 
@@ -60,7 +73,10 @@ export class Graphics {
         if (!canvas) {
             throw "HTMLCanvasElement is null";
         }
-        canvas.addEventListener('click', (e: MouseEvent) => this.onClicked(e, canvas));
+        canvas.addEventListener('mousedown', (e: MouseEvent) => this.onMouseDown(e, canvas));
+        canvas.addEventListener('mouseup', (e: MouseEvent) => this.onMouseUp(e, canvas));
+        canvas.addEventListener('mouseover', (e: MouseEvent) => this.onMouseOver(e, canvas));
+        canvas.addEventListener('mouseout', (e: MouseEvent) => this.onMouseOut(e, canvas));
     }
 
     addFigure(fig: Figure): void {
@@ -80,13 +96,53 @@ export class Graphics {
         }
     }
 
-    onClicked(e: MouseEvent, canvas: HTMLCanvasElement): void {
+    onMouseDown(e: MouseEvent, canvas: HTMLCanvasElement): void {
         const x = e.clientX - canvas.offsetLeft;
         const y = e.clientY - canvas.offsetTop;
 
         for (const fig of this.figures) {
             if (fig.isIn(x, y)) {
-                fig.onClicked();
+                if (fig.onMouseDown)
+                    fig.onMouseDown(fig);
+                break;
+            }
+        }
+    }
+
+    onMouseUp(e: MouseEvent, canvas: HTMLCanvasElement): void {
+        const x = e.clientX - canvas.offsetLeft;
+        const y = e.clientY - canvas.offsetTop;
+
+        for (const fig of this.figures) {
+            if (fig.isIn(x, y)) {
+                if (fig.onMouseUp)
+                    fig.onMouseUp(fig);
+                break;
+            }
+        }
+    }
+
+    onMouseOver(e: MouseEvent, canvas: HTMLCanvasElement): void {
+        const x = e.clientX - canvas.offsetLeft;
+        const y = e.clientY - canvas.offsetTop;
+
+        for (const fig of this.figures) {
+            if (fig.isIn(x, y)) {
+                if (fig.onMouseOver)
+                    fig.onMouseOver(fig);
+                break;
+            }
+        }
+    }
+
+    onMouseOut(e: MouseEvent, canvas: HTMLCanvasElement): void {
+        const x = e.clientX - canvas.offsetLeft;
+        const y = e.clientY - canvas.offsetTop;
+
+        for (const fig of this.figures) {
+            if (fig.isIn(x, y)) {
+                if (fig.onMouseOut)
+                    fig.onMouseOut(fig);
                 break;
             }
         }
