@@ -1,4 +1,4 @@
-import { Audio } from './audio';
+import { Figure } from "./figure";
 
 // グローバル変数
 declare global {
@@ -6,59 +6,6 @@ declare global {
         graphics: Graphics
     }
 };
-
-// Canvasに描く図形
-export class Figure {
-    x: number;
-    y: number;
-    w: number;
-    h: number;
-    c: string;
-
-    onMouseDown: (target: object) => void;
-    onMouseUp: (target: object) => void;
-    onMouseOver: (target: object) => void;
-    onMouseOut: (target: object) => void;
-
-    constructor(x: number, y: number, w: number, h: number, c: string,
-        onMouseDown: (target: object) => void, onMouseUp: (target: object) => void,
-        onMouseOver: (target: object) => void, onMouseOut: (target: object) => void) {
-        this.x = x;
-        this.y = y;
-        this.w = w;
-        this.h = h;
-        this.c = c;
-        this.onMouseDown = onMouseDown;
-        this.onMouseUp = onMouseUp;
-        this.onMouseOver = onMouseOver;
-        this.onMouseOut = onMouseOut;
-    }
-
-    paint(ctx: CanvasRenderingContext2D): void {
-        ctx.fillStyle = this.c;
-        ctx.fillRect(this.x, this.y, this.w, this.h);
-    }
-
-    isIn(x: number, y: number): boolean {
-        return (this.x <= x && x < this.x + this.w) &&
-            (this.y <= y && y < this.y + this.h);
-    }
-
-    onClicked(): void {
-        const d = this.x / 8;
-        const hz = 440.0 * 2 ** (d / 12);
-
-        const audio = new Audio();
-        let gain = audio.createGain()
-        let oscillator = audio.createOscillator();
-        audio.connectDestination(gain);
-        oscillator.connect(gain);
-        oscillator.frequency.value = hz;
-    
-        oscillator.start(0);
-        window.setTimeout(() => oscillator.stop(), 1000);
-    }
-}
 
 // Canvasへのo描画を担う
 export class Graphics {
@@ -100,10 +47,12 @@ export class Graphics {
         const x = e.clientX - canvas.offsetLeft;
         const y = e.clientY - canvas.offsetTop;
 
-        for (const fig of this.figures) {
+        // 逆順(上にo表示されている門から)走査
+        for (let i = this.figures.length - 1; i >= 0; --i) {
+            const fig = this.figures[i];
             if (fig.isIn(x, y)) {
-                if (fig.onMouseDown)
-                    fig.onMouseDown(fig);
+                if (fig.eventHandler)
+                    fig.eventHandler.onMouseDown(fig);
                 break;
             }
         }
@@ -113,10 +62,12 @@ export class Graphics {
         const x = e.clientX - canvas.offsetLeft;
         const y = e.clientY - canvas.offsetTop;
 
-        for (const fig of this.figures) {
+        // 逆順(上にo表示されている門から)走査
+        for (let i = this.figures.length - 1; i >= 0; --i) {
+            const fig = this.figures[i];
             if (fig.isIn(x, y)) {
-                if (fig.onMouseUp)
-                    fig.onMouseUp(fig);
+                if (fig.eventHandler)
+                    fig.eventHandler.onMouseUp(fig);
                 break;
             }
         }
@@ -126,10 +77,12 @@ export class Graphics {
         const x = e.clientX - canvas.offsetLeft;
         const y = e.clientY - canvas.offsetTop;
 
-        for (const fig of this.figures) {
+        // 逆順(上にo表示されている門から)走査
+        for (let i = this.figures.length - 1; i >= 0; --i) {
+            const fig = this.figures[i];
             if (fig.isIn(x, y)) {
-                if (fig.onMouseOver)
-                    fig.onMouseOver(fig);
+                if (fig.eventHandler)
+                    fig.eventHandler.onMouseOver(fig);
                 break;
             }
         }
@@ -139,10 +92,12 @@ export class Graphics {
         const x = e.clientX - canvas.offsetLeft;
         const y = e.clientY - canvas.offsetTop;
 
-        for (const fig of this.figures) {
+        // 逆順(上にo表示されている門から)走査
+        for (let i = this.figures.length - 1; i >= 0; --i) {
+            const fig = this.figures[i];
             if (fig.isIn(x, y)) {
-                if (fig.onMouseOut)
-                    fig.onMouseOut(fig);
+                if (fig.eventHandler)
+                    fig.eventHandler.onMouseOut(fig);
                 break;
             }
         }

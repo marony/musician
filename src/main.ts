@@ -1,43 +1,29 @@
-import { Graphics, Figure } from './graphics';
+import { Graphics } from './graphics';
 import { Audio } from './audio';
 import { AudioController } from './audio_controller';
-
-// 'Play'ボタンが押されたら音を鳴らす
-export function play() {
-    // OscillatorNode (Input) -> GainNode (Volume) -> AudioDestinationNode (Output)
-    const audio = new Audio();
-    let gain = audio.createGain()
-    let oscillator = audio.createOscillator();
-    audio.connectDestination(gain);
-    oscillator.connect(gain);
-
-    oscillator.start(0);
-    window.setTimeout(() => oscillator.stop(), 1000);
-}
+import { Figure } from './figure';
 
 // まいんちゃん
 const main = () => {
-    // クリックされたらplay()を呼ぶ
-    let button = document.getElementById('play');
-    button?.addEventListener('click', (e: Event) => play());
-
     // canvasに何か描くよ
     const canvas = document.getElementById('canvas') as HTMLCanvasElement | null;
     const graphics = Graphics.init(canvas);
     const controller = new AudioController();
 
-    graphics.addFigure(new Figure(0, 0, 75, 300, 'red',
-        controller.onMouseDown, controller.onMouseUp,
-        controller.onMouseOver, controller.onMouseOut));
-    graphics.addFigure(new Figure(75, 0, 75, 300, 'blue',
-        controller.onMouseDown, controller.onMouseUp,
-        controller.onMouseOver, controller.onMouseOut));
-    graphics.addFigure(new Figure(150, 0, 75, 300, 'yellow',
-        controller.onMouseDown, controller.onMouseUp,
-        controller.onMouseOver, controller.onMouseOut));
-    graphics.addFigure(new Figure(225, 0, 75, 300, 'green',
-        controller.onMouseDown, controller.onMouseUp,
-        controller.onMouseOver, controller.onMouseOut));
+    // 白鍵
+    graphics.addFigure(new Figure(0, 0, 43, 150, 'white', 0, controller));
+    graphics.addFigure(new Figure(43, 0, 43, 150, 'white', 2, controller));
+    graphics.addFigure(new Figure(86, 0, 43, 150, 'white', 4, controller));
+    graphics.addFigure(new Figure(129, 0, 43, 150, 'white', 5, controller));
+    graphics.addFigure(new Figure(172, 0, 43, 150, 'white', 7, controller));
+    graphics.addFigure(new Figure(215, 0, 43, 150, 'white', 9, controller));
+    graphics.addFigure(new Figure(258, 0, 43, 150, 'white', 11, controller));
+    // 黒鍵
+    graphics.addFigure(new Figure(26, 0, 33, 100, 'black', 1, controller));
+    graphics.addFigure(new Figure(69, 0, 33, 100, 'black', 3, controller));
+    graphics.addFigure(new Figure(155, 0, 33, 100, 'black', 6, controller));
+    graphics.addFigure(new Figure(198, 0, 33, 100, 'black', 8, controller));
+    graphics.addFigure(new Figure(241, 0, 33, 100, 'black', 10, controller));
 
     graphics.paint(canvas);
 };
