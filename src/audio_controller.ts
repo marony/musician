@@ -32,8 +32,6 @@ class Note {
         this.oscillator = null;
 
         window.setTimeout(() => oscillator.stop(), 200);
-        // 下記だとダメ
-        // window.setTimeout(oscillator.stop, 200);
     }
 }
 
@@ -69,12 +67,11 @@ export class AudioController implements EventHandler<Figure> {
 
     onMouseOver(fig: Figure): void {
         console.log(`onMouseOver: ${fig.note}`);
-        // キャンバスに入った時にしか呼ばれないので
-        // マウスの移動の度に、各figに入った出たを自分で管理する
+        this.onMouseDown(fig);
     }
 
     onMouseOut(fig: Figure): void {
         console.log(`onMouseOut: ${fig.note}`);
-        // キャンバスから出たので全音を止める？
+        this.onMouseUp(fig);
     }
 }

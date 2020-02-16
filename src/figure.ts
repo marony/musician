@@ -1,3 +1,9 @@
+// イベントハンドラ用インターフェース
+// JavaScriptaでは'.'の左側がthisになるので
+// class Figure {
+//   onMouseDown(target: T): void;
+// としてしまうと、onMouseDownの中でthisでAudioControllerが取得できない
+// bindしてもいいけどこうした
 export interface EventHandler<T> {
     onMouseDown(target: T): void;
     onMouseUp(target: T): void;
