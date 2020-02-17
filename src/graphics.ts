@@ -107,18 +107,14 @@ export class Graphics {
             return;
         }
         // 前の鍵盤から'MouseOut'して後の鍵盤に'MouseOver'するイベントを発生させる
-        if (this.prevFigure.note != nowFig?.note) {
-            if (this.prevFigure) {
-                const prevFigure = this.prevFigure;
-                this.prevFigure = null;
-                if (prevFigure.eventHandler)
-                    prevFigure.eventHandler.onMouseOut(prevFigure);
-            }
-            if (nowFig) {
-                this.prevFigure = nowFig;
-                if (nowFig.eventHandler)
-                    nowFig.eventHandler.onMouseOver(nowFig);
-            }
+        const prevKey = this.prevKey;
+        this.prevKey = null;
+        if (prevKey.eventHandler)
+            prevKey.eventHandler.onMouseOut(prevKey);
+        if (nowFig) {
+            this.prevKey = nowFig as Key;
+            if (nowFig.eventHandler)
+                nowFig.eventHandler.onMouseOver(nowFig);
         }
     }
 
@@ -129,6 +125,6 @@ export class Graphics {
             if (fig.eventHandler)
                 fig.eventHandler.onMouseUp(fig);
         }
-        this.prevFigure = null;
+        this.prevKey = null;
     }
 }
