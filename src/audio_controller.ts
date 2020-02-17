@@ -1,5 +1,6 @@
 import { Figure, EventHandler } from "./figure";
 import { Audio } from './audio';
+import { Key } from "./key";
 
 class Note {
     note: number;
@@ -36,10 +37,10 @@ class Note {
 }
 
 // UIと音声の橋渡し
-export class AudioController implements EventHandler<Figure> {
+export class AudioController implements EventHandler<Key> {
     notes: Note[] = [];
 
-    onMouseDown(fig: Figure): void {
+    onMouseDown(fig: Key): void {
         console.log(`onMouseDown: ${fig.note}`);
         const index  = this.notes.findIndex((n) => fig.note == n.note)
         if (index >= 0) {
@@ -52,7 +53,7 @@ export class AudioController implements EventHandler<Figure> {
         note.play(this);
     }
 
-    onMouseUp(fig: Figure): void {
+    onMouseUp(fig: Key): void {
         const index  = this.notes.findIndex((n) => fig.note == n.note)
         console.log(`onMouseUp: ${fig.note}, ${index}`);
         if (index < 0) {
@@ -65,12 +66,12 @@ export class AudioController implements EventHandler<Figure> {
         this.notes.splice(index, 1);
     }
 
-    onMouseOver(fig: Figure): void {
+    onMouseOver(fig: Key): void {
         console.log(`onMouseOver: ${fig.note}`);
         this.onMouseDown(fig);
     }
 
-    onMouseOut(fig: Figure): void {
+    onMouseOut(fig: Key): void {
         console.log(`onMouseOut: ${fig.note}`);
         this.onMouseUp(fig);
     }

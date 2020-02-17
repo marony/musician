@@ -1,4 +1,5 @@
 import { Figure } from "./figure";
+import { Key } from "./key";
 
 // グローバル変数
 declare global {
@@ -10,7 +11,7 @@ declare global {
 // Canvasへのo描画を担う
 export class Graphics {
     figures: Figure[] = [];
-    prevFigure: Figure | null = null;
+    prevKey: Key | null = null;
 
     // ファクトリメソッド
     static init(canvas: HTMLCanvasElement | null): Graphics {
@@ -55,7 +56,8 @@ export class Graphics {
             if (fig.isIn(x, y)) {
                 if (fig.eventHandler)
                     fig.eventHandler.onMouseDown(fig);
-                this.prevFigure = fig;
+                if (fig instanceof Key)
+                    this.prevKey = fig;
                 break;
             }
         }
@@ -71,7 +73,7 @@ export class Graphics {
             if (fig.isIn(x, y)) {
                 if (fig.eventHandler)
                     fig.eventHandler.onMouseUp(fig);
-                this.prevFigure = null;
+                this.prevKey = null;
                 break;
             }
         }
@@ -81,7 +83,7 @@ export class Graphics {
         const x = e.clientX - canvas.offsetLeft;
         const y = e.clientY - canvas.offsetTop;
 
-        if (!this.prevFigure) {
+        if (!this.prevKey) {
             // 鳴ってないので何もしない
             return;
         }
@@ -95,7 +97,12 @@ export class Graphics {
                 break;
             }
         }
-        if (nowFig && this.prevFigure.note == nowFig.note) {
+        let prevNote = this.prevKey.note;
+        let nowNote = -1;
+        if (nowFig && nowFig instanceof Key)
+            nowNote = (nowFig as Key).note;
+        // instanceof
+        if (nowNote == prevNote) {
             // 同じ鍵盤の上なので何もしない
             return;
         }

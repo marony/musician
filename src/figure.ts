@@ -19,23 +19,14 @@ export class Figure {
     height: number;
     color: string;
 
-    note: number;
-
     eventHandler: EventHandler<Figure>
 
-    hz() {
-        return  440.0 * 2 ** (this.note / 12);
-     }
-
-    constructor(x: number, y: number, width: number, height: number, color: string,
-        note: number, eventHandler: EventHandler<Figure>) {
+    constructor(x: number, y: number, width: number, height: number, color: string, eventHandler: EventHandler<Figure>) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.color = color;
-
-        this.note = note;
 
         this.eventHandler = eventHandler;
     }
