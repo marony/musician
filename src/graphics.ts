@@ -12,6 +12,7 @@ export class Graphics {
     figures: Figure[] = [];
     prevFigure: Figure | null = null;
 
+    // ファクトリメソッド
     static init(canvas: HTMLCanvasElement | null): Graphics {
         window.graphics = new Graphics(canvas);
         return window.graphics;
@@ -24,6 +25,7 @@ export class Graphics {
         canvas.addEventListener('mousedown', (e: MouseEvent) => this.onMouseDown(e, canvas));
         canvas.addEventListener('mouseup', (e: MouseEvent) => this.onMouseUp(e, canvas));
         canvas.addEventListener('mousemove', (e: MouseEvent) => this.onMouseMove(e, canvas));
+        canvas.addEventListener('mouseout', (e: MouseEvent) => this.onMouseOut(e, canvas));
     }
 
     addFigure(fig: Figure): void {
@@ -97,7 +99,7 @@ export class Graphics {
             // 同じ鍵盤の上なので何もしない
             return;
         }
-        console.log(`x = ${x}, y = ${y}`);
+        // 前の鍵盤から'MouseOut'して後の鍵盤に'MouseOver'するイベントを発生させる
         if (this.prevFigure.note != nowFig?.note) {
             if (this.prevFigure) {
                 const prevFigure = this.prevFigure;
@@ -111,5 +113,15 @@ export class Graphics {
                     nowFig.eventHandler.onMouseOver(nowFig);
             }
         }
+    }
+
+    onMouseOut(e: MouseEvent, canvas: HTMLCanvasElement): void {
+        // すべて音を消す
+        for (let i = this.figures.length - 1; i >= 0; --i) {
+            const fig = this.figures[i];
+            if (fig.eventHandler)
+                fig.eventHandler.onMouseUp(fig);
+        }
+        this.prevFigure = null;
     }
 }
